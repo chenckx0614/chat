@@ -25,6 +25,33 @@
         </div>
     </div>
 
+    <script>
+        // 新增逐字显示功能
+        function displayStreamResponse(text) {
+            const messagesDiv = document.getElementById('messages');
+            const botMessage = document.createElement('div');
+            messagesDiv.appendChild(botMessage);
+            
+            let index = 0;
+            const interval = setInterval(() => {
+                botMessage.textContent += text[index];
+                index++;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                if (index >= text.length) {
+                    clearInterval(interval);
+                    document.getElementById('loading').style.display = 'none';
+                }
+            }, 30);
+        }
+
+        // 覆盖原sendMessage函数
+        const originalSendMessage = window.sendMessage;
+        window.sendMessage = function() {
+            originalSendMessage();
+            document.getElementById('loading').style.display = 'block';
+            // 这里假设你的API请求在script.js中，需要在其成功回调中调用displayStreamResponse
+        }
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
